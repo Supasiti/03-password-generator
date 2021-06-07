@@ -16,18 +16,18 @@ generateBtn.addEventListener("click", writePassword);
 // Generate password based on user inputs
 
 // character lists
-let charLists = {
+const charLists = {
   "lower case": "abcdefghijklmnopqrstuvwxyz",
   "upper case": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
   "special": "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~",
   "numeric": "1234567890"
 }
-let charOptions = ["lower case", "upper case", "special", "numeric"];
+const charOptions = ["lower case", "upper case", "special", "numeric"];
 
 
 // boolean to generate acceptable password length
 let isValidPasswordLength = function (text) {
-  if (!isNaN(text) && text >= 8 && text <= 128){
+  if (!isNaN(text) && text >= 8 && text <= 128){ 
     return (parseFloat(text) === Math.floor(parseFloat(text)));  // must be an integer
   } else {
     return false;
@@ -121,5 +121,3 @@ function generatePassword() {
     return "";
   }
 }
-
-
