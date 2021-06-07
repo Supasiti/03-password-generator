@@ -17,27 +17,39 @@ generateBtn.addEventListener("click", writePassword);
 
 // character lists
 const charLists = {
-  "lower case": "abcdefghijklmnopqrstuvwxyz",
-  "upper case": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  "special": "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~",
-  "numeric": "1234567890"
+  "lower case": {
+    name: "lower case", 
+    data: "abcdefghijklmnopqrstuvwxyz"
+  },
+  "upper case": {
+    name: "upper case",
+    data: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  },
+  "special": {
+    name: "special",
+    data: "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
+  }, 
+  "numeric": {
+    name: "numeric",
+    data: "1234567890"
+  } 
 }
 const charOptions = ["lower case", "upper case", "special", "numeric"];
 
-
-// boolean to generate acceptable password length
-let isValidPasswordLength = function (text) {
-  if (!isNaN(text) && text >= 8 && text <= 128){ 
-    return (parseFloat(text) === Math.floor(parseFloat(text)));  // must be an integer
-  } else {
-    return false;
+// main function to generate password
+function generatePassword() {
+  let passwordLength = getPasswordLength();
+  if (passwordLength !== null){
+    return generatePasswordOfLength(passwordLength);
+  } else { // cancel is pressed
+    return "";
   }
-}; 
+}
 
 // get password length
 //   - it will repeat the request if the user input is not an integer between 8 and 128
 //   - if they click cancel, it will return null
-let getPasswordLength = function () {
+function getPasswordLength() {
   let result = window.prompt("Please enter the length of your password between 8 and 128");
   if (result === null) {
     return result;
@@ -49,11 +61,25 @@ let getPasswordLength = function () {
   }
 };
 
+// boolean to generate acceptable password length
+function isValidPasswordLength(text) {
+  if (!isNaN(text) && text >= 8 && text <= 128){ 
+    return (parseFloat(text) === Math.floor(parseFloat(text)));  // must be an integer
+  } else {
+    return false;
+  }
+}; 
+
+
+
+
+
+
 // pick a char at random from a pool
 // return
 //  - a random char from a pool
 //  - null otherwise
-let getRandomChar = function (pool) {
+function getRandomChar(pool) {
   if (typeof pool === "string") {
     let index = Math.floor(Math.random() * pool.length);
     return pool.charAt(index);
@@ -69,8 +95,8 @@ let getRandomChar = function (pool) {
 let includeCharPool = function (poolName) {
   let include = window.confirm("Would you like at least one " + poolName + " character?");
   if (include) {
-    let char = getRandomChar(charLists[poolName]);
-    return [char, charLists[poolName]];
+    let char = getRandomChar(charLists[poolName].data);
+    return [char, charLists[poolName].data];
   } else {
     return ["", ""];
   }
@@ -93,13 +119,14 @@ let generateCharPool = function () {
 }
 
 // shuffle string
-let shuffleString = function(str) {
+function shuffleString(str) {
   let shuffled = str.split("").sort(function (){return 0.5- Math.random()}).join("");
   return shuffled;
 }
 
 // generate password of length n
 let generatePasswordOfLength = function(passwordLength) {
+  
   let charPool = generateCharPool(); // [temporary password, character pool to choose from]
   let result = charPool[0];
   let charLeftToSelect = passwordLength - result.length;
@@ -111,13 +138,3 @@ let generatePasswordOfLength = function(passwordLength) {
   return shuffleString(result)
 }
 
-// main function to generate password
-function generatePassword() {
-  let passwordLength = getPasswordLength();
-  if (passwordLength !== null){
-    return generatePasswordOfLength(passwordLength);
-  } else {
-    // cancel is pressed
-    return "";
-  }
-}
