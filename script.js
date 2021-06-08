@@ -69,66 +69,23 @@ function isValidPasswordLength(text) {
   }
 }; 
 
-// // generate password of length n
-// function generatePasswordOfLength(passwordLength){
-
-// };
-
-
-
-
-// pick a char at random from a pool
-// return
-//  - a random char from a pool
-//  - null otherwise
-function getRandomChar(pool) {
-  if (typeof pool === "string") {
-    let index = Math.floor(Math.random() * pool.length);
-    return pool.charAt(index);
-  } else {
-    return null;
-  }
-}
-
-
-
-
-
-
-
-// shuffle string
-function shuffleString(str) {
-  let shuffled = str.split("").sort(function (){return 0.5- Math.random()}).join("");
-  return shuffled;
-}
-
 // generate password of length n
-let generatePasswordOfLength = function(passwordLength) {
-  
+function generatePasswordOfLength(passwordLength){
   let result = "";
   let availableChars = "";
-  
-  let availableCharLists = Object.create(charLists);
-  for (let charSet in availableCharLists) {
-    availableCharLists[charSet] = false;
-  };
+  let chosenCharTypes = createStateObject(charLists);
+  chosenCharTypes = getChosenCharTypes(chosenCharTypes);
 
-  for (let option in charLists) {
-    let charSet = charLists[option];
-    let include = window.confirm("Would you like at least one " + charSet.name + " character?");
-    if (include) {
-      availableCharLists[option] = true;
-    } ;
-  };
 
-  for (let i in availableCharLists){
-    if (availableCharLists[i]){
+
+  for (let i in chosenCharTypes){
+    if (chosenCharTypes[i]){
       availableChars += charLists[i];
     };
   };
 
-  for (let i in availableCharLists){
-    if (availableCharLists[i]){
+  for (let i in chosenCharTypes){
+    if (chosenCharTypes[i]){
       result += getRandomChar(charLists[i].data);
     };
   };
@@ -145,3 +102,49 @@ let generatePasswordOfLength = function(passwordLength) {
   }
   return shuffleString(result)
 };
+
+// create an object with properties from another object with all values set to false
+function createStateObject(object){
+  let result = Object.create(object);
+  for (let prop in result) {
+    result[prop] = false;
+  };
+  return result;
+}
+
+// ask user to pick which character set they want in their password
+function getChosenCharTypes(chosenCharTypes) {
+  // assume that chosenCharTypes have the same properties as charLists
+  let result = Object.create(chosenCharTypes);
+  for (let option in chosenCharTypes) { 
+    let charSetToChoose = charLists[option];
+    let include = window.confirm("Would you like at least one " + charSetToChoose.name + " character?");
+    result[option] = include? true : false;
+  };
+  
+  if (Object.values(result).includes(true)) {
+    return result;
+  } else { // catch if the user didn't select any character types
+    window.alert("You must select least one type of characters!");
+  } 
+}
+
+
+// pick a char at random from a pool
+// return
+//  - a random char from a pool
+//  - null otherwise
+function getRandomChar(pool) {
+  if (typeof pool === "string") {
+    let index = Math.floor(Math.random() * pool.length);
+    return pool.charAt(index);
+  } else {
+    return null;
+  }
+}
+
+// shuffle string
+function shuffleString(str) {
+  let shuffled = str.split("").sort(function (){return 0.5- Math.random()}).join("");
+  return shuffled;
+}
