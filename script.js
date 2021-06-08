@@ -18,11 +18,11 @@ generateBtn.addEventListener("click", writePassword);
 // character lists
 const charLists = {
   lowerCase: {
-    name: "lower case", 
+    name: "lowercase", 
     data: "abcdefghijklmnopqrstuvwxyz"
   },
   upperCase: {
-    name: "upper case",
+    name: "uppercase",
     data: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
   },
   special: {
