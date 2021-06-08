@@ -17,24 +17,23 @@ generateBtn.addEventListener("click", writePassword);
 
 // character lists
 const charLists = {
-  "lower case": {
+  lowerCase: {
     name: "lower case", 
     data: "abcdefghijklmnopqrstuvwxyz"
   },
-  "upper case": {
+  upperCase: {
     name: "upper case",
     data: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
   },
-  "special": {
+  special: {
     name: "special",
     data: "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
   }, 
-  "numeric": {
+  numeric: {
     name: "numeric",
     data: "1234567890"
   } 
-}
-const charOptions = ["lower case", "upper case", "special", "numeric"];
+};
 
 // main function to generate password
 function generatePassword() {
@@ -70,7 +69,10 @@ function isValidPasswordLength(text) {
   }
 }; 
 
+// // generate password of length n
+// function generatePasswordOfLength(passwordLength){
 
+// };
 
 
 
@@ -88,35 +90,11 @@ function getRandomChar(pool) {
   }
 }
 
-// from pool name
-// return 
-//  - a random character from that pool; and 
-//  - a character pool of that name
-let includeCharPool = function (poolName) {
-  let include = window.confirm("Would you like at least one " + poolName + " character?");
-  if (include) {
-    let char = getRandomChar(charLists[poolName].data);
-    return [char, charLists[poolName].data];
-  } else {
-    return ["", ""];
-  }
-}
 
-// generate Character Pool 
-let generateCharPool = function () {
-  result = ["", ""];
-  for (let option of charOptions) {
-    let charToAdd = includeCharPool(option);
-    result[0] += charToAdd[0];
-    result[1] += charToAdd[1];
-  }
-  if (result[0] === ""){   // need to catch if they didn't pick anything
-    window.alert("You must select least one type of characters!");
-    generateCharPool();
-  } else {
-    return  result;
-  }
-}
+
+
+
+
 
 // shuffle string
 function shuffleString(str) {
@@ -127,14 +105,43 @@ function shuffleString(str) {
 // generate password of length n
 let generatePasswordOfLength = function(passwordLength) {
   
-  let charPool = generateCharPool(); // [temporary password, character pool to choose from]
-  let result = charPool[0];
-  let charLeftToSelect = passwordLength - result.length;
+  let result = "";
+  let availableChars = "";
   
+  let availableCharLists = Object.create(charLists);
+  for (let charSet in availableCharLists) {
+    availableCharLists[charSet] = false;
+  };
+
+  for (let option in charLists) {
+    let charSet = charLists[option];
+    let include = window.confirm("Would you like at least one " + charSet.name + " character?");
+    if (include) {
+      availableCharLists[option] = true;
+    } ;
+  };
+
+  for (let i in availableCharLists){
+    if (availableCharLists[i]){
+      availableChars += charLists[i];
+    };
+  };
+
+  for (let i in availableCharLists){
+    if (availableCharLists[i]){
+      result += getRandomChar(charLists[i].data);
+    };
+  };
+  
+
+  if (result === ""){   // need to catch if they didn't pick anything
+    window.alert("You must select least one type of characters!");
+    // generateCharPool();
+  } 
   // pick more characters from the consolidated pool to get to the required length
+  let charLeftToSelect = passwordLength - result.length;
   for (let i of Array(charLeftToSelect).keys()) {
-    result += getRandomChar(charPool[1]);
+    result += getRandomChar(availableChars);
   }
   return shuffleString(result)
-}
-
+};
