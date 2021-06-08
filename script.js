@@ -43,7 +43,7 @@ function generatePassword() {
   } else { // cancel is pressed
     return "";
   }
-}
+};
 
 // get password length
 //   - it will repeat the request if the user input is not an integer between 8 and 128
@@ -74,32 +74,11 @@ function generatePasswordOfLength(passwordLength){
   let result = "";
   let availableChars = "";
   let chosenCharTypes = createStateObject(charLists);
-  chosenCharTypes = getChosenCharTypes(chosenCharTypes);
-
-
-
-  for (let i in chosenCharTypes){
-    if (chosenCharTypes[i]){
-      availableChars += charLists[i];
-    };
-  };
-
-  for (let i in chosenCharTypes){
-    if (chosenCharTypes[i]){
-      result += getRandomChar(charLists[i].data);
-    };
-  };
   
-
-  if (result === ""){   // need to catch if they didn't pick anything
-    window.alert("You must select least one type of characters!");
-    // generateCharPool();
-  } 
-  // pick more characters from the consolidated pool to get to the required length
-  let charLeftToSelect = passwordLength - result.length;
-  for (let i of Array(charLeftToSelect).keys()) {
-    result += getRandomChar(availableChars);
-  }
+  chosenCharTypes = getChosenCharTypes(chosenCharTypes);
+  availableChars = updateAvailableChars(availableChars, chosenCharTypes);
+  result = updatePassword(result, chosenCharTypes);
+  result = AddLettersToLength(result, passwordLength, availableChars);
   return shuffleString(result)
 };
 
@@ -110,25 +89,63 @@ function createStateObject(object){
     result[prop] = false;
   };
   return result;
-}
+};
 
 // ask user to pick which character set they want in their password
+//  - assume that chosenCharTypes have the same properties as charLists
 function getChosenCharTypes(chosenCharTypes) {
-  // assume that chosenCharTypes have the same properties as charLists
-  let result = Object.create(chosenCharTypes);
-  for (let option in chosenCharTypes) { 
-    let charSetToChoose = charLists[option];
-    let include = window.confirm("Would you like at least one " + charSetToChoose.name + " character?");
-    result[option] = include? true : false;
-  };
-  
+  let result = promptToChooseCharTypes(chosenCharTypes);
   if (Object.values(result).includes(true)) {
     return result;
   } else { // catch if the user didn't select any character types
     window.alert("You must select least one type of characters!");
-  } 
+    return getChosenCharTypes(chosenCharTypes);
+  }; 
+};
+
+// loop through the char list to ask user to choose which type they want
+function promptToChooseCharTypes(chosenCharTypes) {
+  let result = Object.create(chosenCharTypes);
+  for (let i in chosenCharTypes) { 
+    let include = window.confirm("Would you like at least one " + charLists[i].name + " character?");
+    result[i] = include? true : false;
+  };
+  return result;
+};
+
+// update available Characters for password
+function updateAvailableChars(letters, chosenCharTypes) {
+  let result = letters;
+  for (let i in chosenCharTypes){
+    if (chosenCharTypes[i]){
+      letters += charLists[i].data;
+    };
+  };
+  return letters;
+};
+
+// update letters chosen for password 
+function updatePassword(letters, chosenCharTypes) {
+  let result = letters;
+  for (let i in chosenCharTypes){
+    if (chosenCharTypes[i]){
+      result += getRandomChar(charLists[i].data);
+    };
+  };
+  return result;
 }
 
+// pick more characters from "selectForm" to get to the required length
+function AddLettersToLength(letters, finalLength, selectFrom) {
+  let result = letters;
+  let charLeftToSelect = finalLength - result.length;
+  if (charLeftToSelect > 0) {
+    for (let i of Array(charLeftToSelect).keys()) {
+      result += getRandomChar(selectFrom);
+    }; 
+  }; 
+  return result;
+};
 
 // pick a char at random from a pool
 // return
@@ -141,10 +158,10 @@ function getRandomChar(pool) {
   } else {
     return null;
   }
-}
+};
 
 // shuffle string
 function shuffleString(str) {
   let shuffled = str.split("").sort(function (){return 0.5- Math.random()}).join("");
   return shuffled;
-}
+};
