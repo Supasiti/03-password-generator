@@ -13,7 +13,7 @@ The character types available are lowercase, uppercase, numeric, and special cha
 
 The end product should resemble the mock-up provided below:
 
-![Password generator demo](./assets/demo/screenshot.png)
+![Password generator demo](./assets/demo/screenshot.jpeg)
 
 > **Note:** This layout will not look as good when the resolution drops below 300px.
 
@@ -52,9 +52,9 @@ To meet all the acceptance criteria above, the following design decisions were c
 - Else, they will be prompted again.
 
 ### Script
-- In this script, I try to follow functional programming priciple and clean code. 
+- In this script, I try to follow functional programming principle and clean code. 
 - I try to keep each function small and only concern with one level of abstraction. 
-- Where appropriate, boolean conditions are extracted into their own function with meaningful names to ease the readibility and aid any future modication.
+- Where appropriate, boolean conditions are extracted into their own function with meaningful names to ease the readibility and aid any future modification.
 - Most functions should have zero side effect. That is, they should not alter the state of other variables and return a value.
 - Most functions don't check the types of their arguments.
 - Ideally, I would like to encaptulate password generator into its own class, but that is beyond the scope in this course so far.  
