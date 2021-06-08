@@ -37,9 +37,13 @@ const charLists = {
 
 // main function to generate password
 function generatePassword() {
-  let passwordLength = getPasswordLength();
-  if (passwordLength !== null){
-    return generatePasswordOfLength(passwordLength);
+  let userSpecs = {};
+  userSpecs.passwordLength = getPasswordLength();
+  userSpecs.chosenCharTypes = createStateObject(charLists);
+  userSpecs.chosenCharTypes = getChosenCharTypes(userSpecs.chosenCharTypes);
+
+  if (userSpecs.passwordLength !== null){
+    return generatePasswordToSpecs(userSpecs);
   } else { // cancel is pressed
     return "";
   }
@@ -68,19 +72,6 @@ function isValidPasswordLength(text) {
     return false;
   }
 }; 
-
-// generate password of length n
-function generatePasswordOfLength(passwordLength){
-  let result = "";
-  let availableChars = "";
-  let chosenCharTypes = createStateObject(charLists);
-  
-  chosenCharTypes = getChosenCharTypes(chosenCharTypes);
-  availableChars = updateAvailableChars(availableChars, chosenCharTypes);
-  result = updatePassword(result, chosenCharTypes);
-  result = AddLettersToLength(result, passwordLength, availableChars);
-  return shuffleString(result)
-};
 
 // create an object with properties from another object with all values set to false
 function createStateObject(object){
@@ -112,6 +103,18 @@ function promptToChooseCharTypes(chosenCharTypes) {
   };
   return result;
 };
+
+// generate password to user specs
+function generatePasswordToSpecs(userSpecs){
+  let result = "";
+  let availableChars = "";
+
+  availableChars = updateAvailableChars(availableChars, userSpecs.chosenCharTypes);
+  result = updatePassword(result, userSpecs.chosenCharTypes);
+  result = AddLettersToLength(result, userSpecs.passwordLength, availableChars);
+  return shuffleString(result)
+};
+
 
 // update available Characters for password
 function updateAvailableChars(letters, chosenCharTypes) {

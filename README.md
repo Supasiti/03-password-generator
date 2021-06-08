@@ -37,7 +37,7 @@ The final webpage can be accessed through the following [link](https://supasiti.
 
 The workflow for user looks like:
 
-    specify password length --> choose lowercase or not --> choose uppercase or not -->
+    choose password length --> choose lowercase or not --> choose uppercase or not -->
     choose special characters or not --> choose numeric or not --> password is generated
 
 To meet all the acceptance criteria above, the following design decisions were considered.
@@ -45,5 +45,20 @@ To meet all the acceptance criteria above, the following design decisions were c
 ### Acceptable input for password length
 - Only acceptable input for password length is an integer between 8 and 128.
 - A user will be prompted to enter a length again if they entered incorrectly.
-- A user can 
+- A user can exit by clicking on `Cancel` button.
 
+### Acceptable input for character types
+- A user must select at least one character type.
+- Else, they will be prompted again.
+
+### Script
+- In this script, I try to follow functional programming priciple and clean code. 
+- I try to keep each function small and only concern with one level of abstraction. 
+- Where appropriate, boolean conditions are extracted into their own function with meaningful names to ease the readibility and aid any future modication.
+- Most functions should have zero side effect. That is, they should not alter the state of other variables and return a value.
+- Most functions don't check the types of their arguments.
+- Ideally, I would like to encaptulate password generator into its own class, but that is beyond the scope in this course so far.  
+- The script is seperated into two parts:
+  - user prompt script; and 
+  - password generating script.
+- This will allow for future extraction if needed. 
