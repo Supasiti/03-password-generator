@@ -37,13 +37,12 @@ const charLists = {
 
 // main function to generate password
 function generatePassword() {
-  let userSpecs = {};
-  userSpecs.passwordLength = getPasswordLength();
-  userSpecs.chosenCharTypes = createStateObject(charLists);
-  userSpecs.chosenCharTypes = getChosenCharTypes(userSpecs.chosenCharTypes);
+  let passwordSpecs = {};
+  passwordSpecs.passwordLength = getPasswordLength();
 
-  if (userSpecs.passwordLength !== null){
-    return generatePasswordToSpecs(userSpecs);
+  if (passwordSpecs.passwordLength !== null){
+    passwordSpecs.chosenCharTypes = getChosenCharTypes(createStateObject(charLists));
+    return generatePasswordToSpecs(passwordSpecs);
   } else { // cancel is pressed
     return "";
   }
@@ -60,7 +59,7 @@ function getPasswordLength() {
     return parseInt(result);
   } else {
     window.alert("This is not an integer between 8 and 128!")
-    getPasswordLength()
+    return getPasswordLength()
   }
 };
 
@@ -105,13 +104,13 @@ function promptToChooseCharTypes(chosenCharTypes) {
 };
 
 // generate password to user specs
-function generatePasswordToSpecs(userSpecs){
+function generatePasswordToSpecs(specs){
   let result = "";
   let availableChars = "";
 
-  availableChars = updateAvailableChars(availableChars, userSpecs.chosenCharTypes);
-  result = updatePassword(result, userSpecs.chosenCharTypes);
-  result = AddLettersToLength(result, userSpecs.passwordLength, availableChars);
+  availableChars = updateAvailableChars(availableChars, specs.chosenCharTypes);
+  result = updatePassword(result, specs.chosenCharTypes);
+  result = AddLettersToLength(result, specs.passwordLength, availableChars);
   return shuffleString(result)
 };
 
